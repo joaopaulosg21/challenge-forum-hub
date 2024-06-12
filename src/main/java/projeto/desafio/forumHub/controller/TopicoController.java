@@ -10,32 +10,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import projeto.desafio.forumHub.domain.topico.DadosRegistroTopico;
-import projeto.desafio.forumHub.domain.topico.DadosTopico;
-import projeto.desafio.forumHub.domain.topico.Topico;
-import projeto.desafio.forumHub.domain.topico.TopicoRepository;
+import projeto.desafio.forumHub.domain.topico.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/topicos")
 @RequiredArgsConstructor
 public class TopicoController {
-    private final TopicoRepository topicoRepository;
+    private final TopicoService service;
 
     @PostMapping
     @Transactional
     public ResponseEntity<DadosTopico> registrar(@Valid @RequestBody DadosRegistroTopico dados, UriComponentsBuilder builder) {
-        Topico topico = topicoRepository.save(new Topico(dados));
-        URI uri = builder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
-        return ResponseEntity.created(uri).body(new DadosTopico(topico));
+        DadosTopico dadosTopico = service.registrar(dados);
+        URI uri = builder.path("/topicos/{id}").buildAndExpand(dadosTopico.id()).toUri();
+        return ResponseEntity.created(uri).body(dadosTopico);
     }
 
     @GetMapping
     public ResponseEntity<Page<?>> buscarTodos(@PageableDefault(size = 10,sort = {"dataCriacao"},direction = Sort.Direction.ASC)
                                                              Pageable pageable) {
-        var dadosTopicos = topicoRepository.findAll(pageable).map(DadosTopico::new);
-        return ResponseEntity.ok(dadosTopicos);
+        return ResponseEntity.ok(service.buscarTodos(pageable));
     }
 }
