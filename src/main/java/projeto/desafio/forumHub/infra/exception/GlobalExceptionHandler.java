@@ -5,6 +5,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,8 +13,8 @@ import java.util.List;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({RegisterException.class})
-    public ResponseEntity<?> registerExceptionHandler(RegisterException exc) {
+    @ExceptionHandler({RegisterException.class, MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<?> registerExceptionHandler(RuntimeException exc) {
         DefaultExceptionResponse response = new DefaultExceptionResponse(LocalDateTime.now(), 400, exc.getMessage());
         return ResponseEntity.badRequest().body(response);
     }

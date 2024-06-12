@@ -36,6 +36,11 @@ public class TopicoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DadosTopico> buscarPeloId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.buscarPeloId(id));
+        return ResponseEntity.ok(service.buscar(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DadosTopico> atualizar(@PathVariable Long id, @Valid @RequestBody DadosAtualizacaoTopico dados) {
+        return ResponseEntity.ok(service.atualizar(id,dados));
     }
 }

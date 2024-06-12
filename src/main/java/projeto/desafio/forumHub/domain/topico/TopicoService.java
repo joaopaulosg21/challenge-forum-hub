@@ -28,13 +28,29 @@ public class TopicoService {
         return repository.findAll(pageable).map(DadosTopico::new);
     }
 
-    public DadosTopico buscarPeloId(Long id) {
+    public DadosTopico buscar(Long id) {
+
+        return new DadosTopico(this.buscarTopicoPeloId(id));
+    }
+
+    private Topico buscarTopicoPeloId(Long id) {
         Optional<Topico> optionalTopico = repository.findById(id);
 
         if(optionalTopico.isEmpty()) {
             throw new NotFoundException("Topico com esse id não encontrado");
         }
+        return optionalTopico.get();
+    }
 
-        return new DadosTopico(optionalTopico.get());
+    public DadosTopico atualizar(Long id, DadosAtualizacaoTopico dados) {
+       Optional<Topico> optionalTopico = repository.findByTituloAndMensagem(dados.titulo(), dados.mensagem());
+
+        if(optionalTopico.isPresent()) {
+            throw new RegisterException("Não é possivel registrar um topico com o mesmo titulo e mensagem");
+        }
+        Topico topico = this.buscarTopicoPeloId(id);
+        topico.atualizar(dados);
+
+        return new DadosTopico(repository.save(topico));
     }
 }
