@@ -26,6 +26,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(
                 erros.stream().map(FieldExceptionResponse::new).toList());
     }
+
+    @ExceptionHandler({NotFoundException.class})
+    public ResponseEntity<?> notFoundExceptionHandler(NotFoundException exc) {
+        return ResponseEntity.notFound().build();
+    }
 }
 
 

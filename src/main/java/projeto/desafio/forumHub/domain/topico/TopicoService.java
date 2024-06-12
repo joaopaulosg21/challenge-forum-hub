@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import projeto.desafio.forumHub.infra.exception.NotFoundException;
 import projeto.desafio.forumHub.infra.exception.RegisterException;
 
 import java.util.Optional;
@@ -25,5 +26,15 @@ public class TopicoService {
 
     public Page<DadosTopico> buscarTodos(Pageable pageable) {
         return repository.findAll(pageable).map(DadosTopico::new);
+    }
+
+    public DadosTopico buscarPeloId(Long id) {
+        Optional<Topico> optionalTopico = repository.findById(id);
+
+        if(optionalTopico.isEmpty()) {
+            throw new NotFoundException("Topico com esse id não encontrado");
+        }
+
+        return new DadosTopico(optionalTopico.get());
     }
 }

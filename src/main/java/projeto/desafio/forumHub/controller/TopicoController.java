@@ -29,8 +29,13 @@ public class TopicoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<?>> buscarTodos(@PageableDefault(size = 10,sort = {"dataCriacao"},direction = Sort.Direction.ASC)
+    public ResponseEntity<Page<DadosTopico>> buscarTodos(@PageableDefault(size = 10,sort = {"dataCriacao"},direction = Sort.Direction.ASC)
                                                              Pageable pageable) {
         return ResponseEntity.ok(service.buscarTodos(pageable));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DadosTopico> buscarPeloId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPeloId(id));
     }
 }
