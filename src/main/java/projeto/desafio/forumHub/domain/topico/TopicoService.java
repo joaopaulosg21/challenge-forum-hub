@@ -53,4 +53,9 @@ public class TopicoService {
 
         return new DadosTopico(repository.save(topico));
     }
+
+    public void deletar(Long id) {
+        Topico topico = this.buscarTopicoPeloId(id);
+        repository.deleteById(topico.getId());
+    }
 }
