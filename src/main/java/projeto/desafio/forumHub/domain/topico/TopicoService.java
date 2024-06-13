@@ -43,20 +43,30 @@ public class TopicoService {
         return optionalTopico.get();
     }
 
-    public DadosTopico atualizar(Long id, DadosAtualizacaoTopico dados) {
+
+    public DadosTopico atualizar(Long id, DadosAtualizacaoTopico dados, Usuario usuario) {
        Optional<Topico> optionalTopico = repository.findByTituloAndMensagem(dados.titulo(), dados.mensagem());
 
         if(optionalTopico.isPresent()) {
             throw new RegisterException("Não é possivel registrar um topico com o mesmo titulo e mensagem");
         }
-        Topico topico = this.buscarTopicoPeloId(id);
+        Topico topico = this.buscarTopicoPeloIdEUsuario(id,usuario);
         topico.atualizar(dados);
 
         return new DadosTopico(repository.save(topico));
     }
 
-    public void deletar(Long id) {
-        Topico topico = this.buscarTopicoPeloId(id);
+    public void deletar(Long id, Usuario usuario) {
+        Topico topico = this.buscarTopicoPeloIdEUsuario(id,usuario);
         repository.deleteById(topico.getId());
+    }
+
+    private Topico buscarTopicoPeloIdEUsuario(Long id, Usuario usuario) {
+        Optional<Topico> optionalTopico = repository.findByIdAndAutor(id,usuario);
+
+        if(optionalTopico.isEmpty()) {
+            throw new NotFoundException("Topico com esse id não encontrado");
+        }
+        return optionalTopico.get();
     }
 }

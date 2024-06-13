@@ -43,13 +43,14 @@ public class TopicoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DadosTopico> atualizar(@PathVariable Long id, @Valid @RequestBody DadosAtualizacaoTopico dados) {
-        return ResponseEntity.ok(service.atualizar(id,dados));
+    public ResponseEntity<DadosTopico> atualizar(@PathVariable Long id, @Valid @RequestBody DadosAtualizacaoTopico dados,
+                                                 @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(service.atualizar(id,dados,usuario));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Long id) {
-        service.deletar(id);
+    public ResponseEntity<?> deletar(@PathVariable Long id, @AuthenticationPrincipal Usuario usuario) {
+        service.deletar(id,usuario);
         return ResponseEntity.ok().build();
     }
 }
