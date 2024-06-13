@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import projeto.desafio.forumHub.domain.usuario.Usuario;
 
 import java.time.LocalDateTime;
 
@@ -27,14 +28,15 @@ public class Topico {
 
     private String curso;
 
-    //Alterar quando criar o model User
-    private String autor;
+    @ManyToOne
+    @JoinColumn(columnDefinition = "autor_id",referencedColumnName = "id")
+    private Usuario autor;
 
-    public Topico(DadosRegistroTopico dados) {
+    public Topico(DadosRegistroTopico dados, Usuario autor) {
         this.titulo = dados.titulo();
         this.mensagem = dados.mensagem();
         this.curso = dados.curso();
-        this.autor = dados.autor();
+        this.autor = autor;
     }
 
     public void atualizar(DadosAtualizacaoTopico dados) {

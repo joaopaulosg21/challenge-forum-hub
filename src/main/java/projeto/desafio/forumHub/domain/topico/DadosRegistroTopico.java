@@ -8,8 +8,6 @@ public record DadosRegistroTopico(
         @NotBlank
         String mensagem,
         @NotBlank
-        String autor,
-        @NotBlank
         String curso
 ) {
 }
