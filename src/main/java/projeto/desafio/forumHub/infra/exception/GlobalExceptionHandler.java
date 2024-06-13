@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +32,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({NotFoundException.class})
     public ResponseEntity<?> notFoundExceptionHandler(NotFoundException exc) {
         return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler({TokenException.class})
+    public ResponseEntity<?> tokenExceptionHandler(TokenException exc) {
+        DefaultExceptionResponse response = new DefaultExceptionResponse(LocalDateTime.now(), 403, exc.getMessage());
+        return ResponseEntity.status(403).body(response);
     }
 }
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import projeto.desafio.forumHub.domain.usuario.DadosLogin;
+import projeto.desafio.forumHub.infra.security.auth.TokenService;
 
 @RestController
 @RequestMapping("/login")
@@ -18,10 +19,13 @@ import projeto.desafio.forumHub.domain.usuario.DadosLogin;
 public class AuthenticationController {
     private final AuthenticationManager manager;
 
+    private final TokenService tokenService;
+
     @PostMapping
     public ResponseEntity<?> login(@Valid @RequestBody DadosLogin dados) {
         var authToken = new UsernamePasswordAuthenticationToken(dados.email(),dados.password());
         Authentication auth = manager.authenticate(authToken);
-        return ResponseEntity.ok(auth);
+        String token = tokenService.gerar(auth);
+        return ResponseEntity.ok(tokenService.getSubject("token"));
     }
 }
