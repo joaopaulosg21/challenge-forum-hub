@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import projeto.desafio.forumHub.domain.usuario.DadosLogin;
+import projeto.desafio.forumHub.domain.usuario.TokenResponse;
 import projeto.desafio.forumHub.infra.security.auth.TokenService;
 
 @RestController
@@ -26,6 +27,6 @@ public class AuthenticationController {
         var authToken = new UsernamePasswordAuthenticationToken(dados.email(),dados.password());
         Authentication auth = manager.authenticate(authToken);
         String token = tokenService.gerar(auth);
-        return ResponseEntity.ok(tokenService.getSubject("token"));
+        return ResponseEntity.ok(new TokenResponse("Bearer",token));
     }
 }
